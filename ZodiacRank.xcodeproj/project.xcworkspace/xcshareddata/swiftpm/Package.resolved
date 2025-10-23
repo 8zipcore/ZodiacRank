@@ -1,0 +1,15 @@
+{
+  "originHash" : "f7314a440d02a43f5108955d8b540c32c2f68b3f01e7a4e0e96380b74e21ac1d",
+  "pins" : [
+    {
+      "identity" : "swiftaa",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/8zipcore/SwiftAA",
+      "state" : {
+        "branch" : "master",
+        "revision" : "aa1e6f8205de8cd70531209c7f7a5d757d642f6d"
+      }
+    }
+  ],
+  "version" : 3
+}

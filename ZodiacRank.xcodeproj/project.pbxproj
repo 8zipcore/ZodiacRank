@@ -6,6 +6,12 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		36EF5F2F2EAA3DC900D20109 /* AABridge in Frameworks */ = {isa = PBXBuildFile; productRef = 36EF5F2E2EAA3DC900D20109 /* AABridge */; };
+		36EF5F312EAA3DC900D20109 /* AAplus in Frameworks */ = {isa = PBXBuildFile; productRef = 36EF5F302EAA3DC900D20109 /* AAplus */; };
+		36EF5F332EAA3DC900D20109 /* SwiftAA in Frameworks */ = {isa = PBXBuildFile; productRef = 36EF5F322EAA3DC900D20109 /* SwiftAA */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
 		361558F92EA54A6C00D8D713 /* ZodiacRank.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ZodiacRank.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -23,6 +29,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				36EF5F332EAA3DC900D20109 /* SwiftAA in Frameworks */,
+				36EF5F312EAA3DC900D20109 /* AAplus in Frameworks */,
+				36EF5F2F2EAA3DC900D20109 /* AABridge in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -65,6 +74,9 @@
 			);
 			name = ZodiacRank;
 			packageProductDependencies = (
+				36EF5F2E2EAA3DC900D20109 /* AABridge */,
+				36EF5F302EAA3DC900D20109 /* AAplus */,
+				36EF5F322EAA3DC900D20109 /* SwiftAA */,
 			);
 			productName = ZodiacRank;
 			productReference = 361558F92EA54A6C00D8D713 /* ZodiacRank.app */;
@@ -94,6 +106,9 @@
 			);
 			mainGroup = 361558F02EA54A6C00D8D713;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				36EF5F2D2EAA3DC900D20109 /* XCRemoteSwiftPackageReference "SwiftAA" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 361558FA2EA54A6C00D8D713 /* Products */;
 			projectDirPath = "";
@@ -320,6 +335,35 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		36EF5F2D2EAA3DC900D20109 /* XCRemoteSwiftPackageReference "SwiftAA" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/8zipcore/SwiftAA";
+			requirement = {
+				branch = master;
+				kind = branch;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		36EF5F2E2EAA3DC900D20109 /* AABridge */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 36EF5F2D2EAA3DC900D20109 /* XCRemoteSwiftPackageReference "SwiftAA" */;
+			productName = AABridge;
+		};
+		36EF5F302EAA3DC900D20109 /* AAplus */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 36EF5F2D2EAA3DC900D20109 /* XCRemoteSwiftPackageReference "SwiftAA" */;
+			productName = AAplus;
+		};
+		36EF5F322EAA3DC900D20109 /* SwiftAA */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 36EF5F2D2EAA3DC900D20109 /* XCRemoteSwiftPackageReference "SwiftAA" */;
+			productName = SwiftAA;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 361558F12EA54A6C00D8D713 /* Project object */;
 }
