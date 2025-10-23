@@ -12,14 +12,30 @@
 		36EF5F332EAA3DC900D20109 /* SwiftAA in Frameworks */ = {isa = PBXBuildFile; productRef = 36EF5F322EAA3DC900D20109 /* SwiftAA */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		36EF5F3C2EAA443800D20109 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 361558F12EA54A6C00D8D713 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 361558F82EA54A6C00D8D713;
+			remoteInfo = ZodiacRank;
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXFileReference section */
 		361558F92EA54A6C00D8D713 /* ZodiacRank.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ZodiacRank.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		36EF5F382EAA443800D20109 /* ZodiacRankTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ZodiacRankTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		361558FB2EA54A6C00D8D713 /* ZodiacRank */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = ZodiacRank;
+			sourceTree = "<group>";
+		};
+		36EF5F392EAA443800D20109 /* ZodiacRankTests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = ZodiacRankTests;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -35,6 +51,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		36EF5F352EAA443800D20109 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -42,6 +65,7 @@
 			isa = PBXGroup;
 			children = (
 				361558FB2EA54A6C00D8D713 /* ZodiacRank */,
+				36EF5F392EAA443800D20109 /* ZodiacRankTests */,
 				361558FA2EA54A6C00D8D713 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -50,6 +74,7 @@
 			isa = PBXGroup;
 			children = (
 				361558F92EA54A6C00D8D713 /* ZodiacRank.app */,
+				36EF5F382EAA443800D20109 /* ZodiacRankTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -82,6 +107,29 @@
 			productReference = 361558F92EA54A6C00D8D713 /* ZodiacRank.app */;
 			productType = "com.apple.product-type.application";
 		};
+		36EF5F372EAA443800D20109 /* ZodiacRankTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 36EF5F3E2EAA443800D20109 /* Build configuration list for PBXNativeTarget "ZodiacRankTests" */;
+			buildPhases = (
+				36EF5F342EAA443800D20109 /* Sources */,
+				36EF5F352EAA443800D20109 /* Frameworks */,
+				36EF5F362EAA443800D20109 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				36EF5F3D2EAA443800D20109 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				36EF5F392EAA443800D20109 /* ZodiacRankTests */,
+			);
+			name = ZodiacRankTests;
+			packageProductDependencies = (
+			);
+			productName = ZodiacRankTests;
+			productReference = 36EF5F382EAA443800D20109 /* ZodiacRankTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -94,6 +142,10 @@
 				TargetAttributes = {
 					361558F82EA54A6C00D8D713 = {
 						CreatedOnToolsVersion = 16.4;
+					};
+					36EF5F372EAA443800D20109 = {
+						CreatedOnToolsVersion = 16.4;
+						TestTargetID = 361558F82EA54A6C00D8D713;
 					};
 				};
 			};
@@ -115,12 +167,20 @@
 			projectRoot = "";
 			targets = (
 				361558F82EA54A6C00D8D713 /* ZodiacRank */,
+				36EF5F372EAA443800D20109 /* ZodiacRankTests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
 		361558F72EA54A6C00D8D713 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		36EF5F362EAA443800D20109 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -137,7 +197,22 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		36EF5F342EAA443800D20109 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		36EF5F3D2EAA443800D20109 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 361558F82EA54A6C00D8D713 /* ZodiacRank */;
+			targetProxy = 36EF5F3C2EAA443800D20109 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		361559022EA54A6D00D8D713 /* Debug */ = {
@@ -313,6 +388,40 @@
 			};
 			name = Release;
 		};
+		36EF5F3F2EAA443800D20109 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.sainkr.ZodiacRankTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/ZodiacRank.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/ZodiacRank";
+			};
+			name = Debug;
+		};
+		36EF5F402EAA443800D20109 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.sainkr.ZodiacRankTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/ZodiacRank.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/ZodiacRank";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -330,6 +439,15 @@
 			buildConfigurations = (
 				361559052EA54A6D00D8D713 /* Debug */,
 				361559062EA54A6D00D8D713 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		36EF5F3E2EAA443800D20109 /* Build configuration list for PBXNativeTarget "ZodiacRankTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				36EF5F3F2EAA443800D20109 /* Debug */,
+				36EF5F402EAA443800D20109 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
