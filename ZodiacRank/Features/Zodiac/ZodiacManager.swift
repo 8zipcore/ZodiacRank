@@ -9,14 +9,24 @@ import SwiftAA
 import Foundation
 
 struct ZodiacManager {
+  var zodiacScoresProvider: [ZodiacSign: ZodiacScore]?
+  
   func zodiacRank(for day: Int = Date.now.day) -> [ZodiacSign] {
     let zodiacScores = calculateZodiacScores(for: day)
     let sortedZodiac = sortZodiacScores(from: zodiacScores)
+    
+    sortedZodiac.forEach {
+      print($0.key.name, $0.value.score)
+    }
     
     return sortedZodiac.map { $0.value.sign }
   }
   
   private func calculateZodiacScores(for day: Int) -> [ZodiacSign: ZodiacScore] {
+    if let mock = zodiacScoresProvider {
+      return mock
+    }
+    
     var zodiacScore: [ZodiacSign: ZodiacScore] = Dictionary(uniqueKeysWithValues: ZodiacSign.allCases.map { sign in
       (sign, ZodiacScore(sign: sign))
     })

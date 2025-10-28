@@ -6,30 +6,134 @@
 //
 
 import XCTest
+@testable import ZodiacRank
 
 final class ZodiacRankTests: XCTestCase {
-
-    override func setUpWithError() throws {
-        // Put setup code here. This method is called before the invocation of each test method in the class.
-    }
-
-    override func tearDownWithError() throws {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
-    }
-
-    func testExample() throws {
-        // This is an example of a functional test case.
-        // Use XCTAssert and related functions to verify your tests produce the correct results.
-        // Any test you write for XCTest can be annotated as throws and async.
-        // Mark your test throws to produce an unexpected failure when your test encounters an uncaught error.
-        // Mark your test async to allow awaiting for asynchronous code to complete. Check the results with assertions afterwards.
-    }
-
-    func testPerformanceExample() throws {
-        // This is an example of a performance test case.
-        measure {
-            // Put the code you want to measure the time of here.
-        }
-    }
-
+  
+  override func setUpWithError() throws { }
+  
+  override func tearDownWithError() throws { }
+  
+  func testSortZodiacScore() {
+    let mockZodiacScores: [ZodiacSign: ZodiacScore] = [
+      .aries: ZodiacScore(
+        sign: .aries,
+        score: 4,
+        rulershipCount: 1,
+        exaltationCount: 1,
+        detrimentCount: 1,
+        fallCount: 0
+      ),
+      .taurus: ZodiacScore(
+        sign: .taurus,
+        score: 1,
+        rulershipCount: 1,
+        exaltationCount: 0,
+        detrimentCount: 0,
+        fallCount: 1
+      ),
+      .gemini: ZodiacScore(
+        sign: .gemini,
+        score: 5,
+        rulershipCount: 1,
+        exaltationCount: 0,
+        detrimentCount: 0,
+        fallCount: 0
+      ),
+      .cancer: ZodiacScore(
+        sign: .cancer,
+        score: 4,
+        rulershipCount: 0,
+        exaltationCount: 1,
+        detrimentCount: 0,
+        fallCount: 0
+      ),
+      .leo: ZodiacScore(
+        sign: .leo,
+        score: 9,
+        rulershipCount: 1,
+        exaltationCount: 1,
+        detrimentCount: 0,
+        fallCount: 0
+      ),
+      .virgo: ZodiacScore(
+        sign: .virgo,
+        score: 1,
+        rulershipCount: 1,
+        exaltationCount: 0,
+        detrimentCount: 0,
+        fallCount: 1
+      ),
+      .libra: ZodiacScore(
+        sign: .libra,
+        score: -1,
+        rulershipCount: 0,
+        exaltationCount: 1,
+        detrimentCount: 1,
+        fallCount: 0
+      ),
+      .scorpio: ZodiacScore(
+        sign: .scorpio,
+        score: 5,
+        rulershipCount: 1,
+        exaltationCount: 1,
+        detrimentCount: 0,
+        fallCount: 1
+      ),
+      .sagittarius: ZodiacScore(
+        sign: .sagittarius,
+        score: 0,
+        rulershipCount: 1,
+        exaltationCount: 0,
+        detrimentCount: 1,
+        fallCount: 0
+      ),
+      .capricorn: ZodiacScore(
+        sign: .capricorn,
+        score: 0,
+        rulershipCount: 0,
+        exaltationCount: 1,
+        detrimentCount: 0,
+        fallCount: 1
+      ),
+      .aquarius: ZodiacScore(
+        sign: .aquarius,
+        score: -4,
+        rulershipCount: 1,
+        exaltationCount: 0,
+        detrimentCount: 1,
+        fallCount: 1
+      ),
+      .pisces: ZodiacScore(
+        sign: .pisces,
+        score: 4,
+        rulershipCount: 0,
+        exaltationCount: 1,
+        detrimentCount: 0,
+        fallCount: 0
+      )
+    ]
+    
+    let sortedZodiacRank: [ZodiacSign] = [
+      .leo,
+      .scorpio,
+      .gemini,
+      .aries,
+      .cancer,
+      .pisces,
+      .taurus,
+      .virgo,
+      .sagittarius,
+      .capricorn,
+      .libra,
+      .aquarius
+    ]
+    
+    var zodiacManager = ZodiacManager()
+    zodiacManager.zodiacScoresProvider = mockZodiacScores
+    
+    let zodiacRank = zodiacManager.zodiacRank()
+    
+    XCTAssertEqual(sortedZodiacRank, zodiacRank)
+  }
 }
