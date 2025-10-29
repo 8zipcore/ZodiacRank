@@ -16,8 +16,10 @@ struct ZodiacScore {
   var detrimentCount: Int = 0
   var fallCount: Int = 0
   
-  mutating func appendScore(_ planetScore: PlanetScore) {
-    score += planetScore.rawValue
+  mutating func appendScore(planet: Planet, _ planetScore: PlanetScore) {
+    let isMoon = planet == .moon
+    // 달은 가중치 적용
+    score += isMoon ? planetScore.rawValue * 2 : planetScore.rawValue
     
     switch planetScore {
     case .rulership:
@@ -31,5 +33,9 @@ struct ZodiacScore {
     case .none:
       break
     }
+  }
+  
+  mutating func appendScore(_ angleScore: AngleScore) {
+    score += angleScore.rawValue
   }
 }

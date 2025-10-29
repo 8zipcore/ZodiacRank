@@ -12,29 +12,43 @@ struct ZodiacManager {
   var zodiacScoresProvider: [ZodiacSign: ZodiacScore]?
   
   func zodiacRank(for day: Int = Date.now.day) -> [ZodiacSign] {
-    let zodiacScores = calculateZodiacScores(for: day)
-    let sortedZodiac = sortZodiacScores(from: zodiacScores)
-    
-    sortedZodiac.forEach {
-      print($0.key.name, $0.value.score)
-    }
-    
+    let planetScores = calculatePlanetScores(for: day)
+    let angleScores = calculateAngleScores(for: day)
+    let totalScores =  Dictionary(
+      uniqueKeysWithValues: planetScores.map { score in
+        let zodiacSign = score.key
+        var newScore = score
+        newScore.value.score += angleScores[zodiacSign]?.score ?? 0
+        
+        return newScore
+      }
+    )
+    let sortedZodiac = sortZodiacScores(from: totalScores)
+
     return sortedZodiac.map { $0.value.sign }
   }
   
-  private func calculateZodiacScores(for day: Int) -> [ZodiacSign: ZodiacScore] {
+  private func initialZodiacScores() -> [ZodiacSign: ZodiacScore] {
+    Dictionary(uniqueKeysWithValues: ZodiacSign.allCases.map { sign in
+      (sign, ZodiacScore(sign: sign))
+    })
+  }
+}
+
+// MARK: - 행성 위치별 계산
+extension ZodiacManager {
+  private func calculatePlanetScores(for day: Int) -> [ZodiacSign: ZodiacScore] {
     if let mock = zodiacScoresProvider {
       return mock
     }
     
-    var zodiacScore: [ZodiacSign: ZodiacScore] = Dictionary(uniqueKeysWithValues: ZodiacSign.allCases.map { sign in
-      (sign, ZodiacScore(sign: sign))
-    })
+    var zodiacScore: [ZodiacSign: ZodiacScore] = initialZodiacScores()
     
     Planet.allCases.forEach { planet in
-      let zodiacSign = planetZodiacSign(for: day, planet: planet)
+      let longtitude = planetLongtitude(for: day, planet: planet)
+      let zodiacSign = zodiacSign(from: longtitude)
       let score = PlanetScore.score(for: planet, at: zodiacSign)
-      zodiacScore[zodiacSign]?.appendScore(score)
+      zodiacScore[zodiacSign]?.appendScore(planet: planet, score)
     }
     
     return zodiacScore
@@ -42,7 +56,7 @@ struct ZodiacManager {
   
   private func sortZodiacScores(from zodiacScores: [ZodiacSign : ZodiacScore]) -> [(key: ZodiacSign, value: ZodiacScore)] {
     return zodiacScores.sorted { (lhs: (key: ZodiacSign, value: ZodiacScore),
-                                             rhs: (key: ZodiacSign, value: ZodiacScore)) in
+                                  rhs: (key: ZodiacSign, value: ZodiacScore)) in
       if lhs.value.score != rhs.value.score {
         return lhs.value.score > rhs.value.score
       }
@@ -61,31 +75,31 @@ struct ZodiacManager {
     }
   }
   
-  private func planetZodiacSign(for day: Int, planet: Planet) -> ZodiacSign {
+  private func planetLongtitude(for day: Int, planet: Planet) -> Degree {
     let now = JulianDay(Date.makeDate(day: day))
     
     switch planet {
     case .sun:
       let sun = Sun(julianDay: now)
-      return zodiacSign(from: sun.eclipticCoordinates.celestialLongitude)
+      return sun.eclipticCoordinates.celestialLongitude
     case .moon:
       let moon = Moon(julianDay: now)
-      return zodiacSign(from: moon.eclipticCoordinates.celestialLongitude)
+      return moon.eclipticCoordinates.celestialLongitude
     case .mercury:
       let mercury = Mercury(julianDay: now)
-      return zodiacSign(from: mercury.equatorialCoordinates.makeEclipticCoordinates().celestialLongitude)
+      return mercury.equatorialCoordinates.makeEclipticCoordinates().celestialLongitude
     case .venus:
       let venus = Venus(julianDay: now)
-      return zodiacSign(from: venus.equatorialCoordinates.makeEclipticCoordinates().celestialLongitude)
+      return venus.equatorialCoordinates.makeEclipticCoordinates().celestialLongitude
     case .mars:
       let mars = Mars(julianDay: now)
-      return zodiacSign(from: mars.equatorialCoordinates.makeEclipticCoordinates().celestialLongitude)
+      return mars.equatorialCoordinates.makeEclipticCoordinates().celestialLongitude
     case .jupiter:
       let jupiter = Jupiter(julianDay: now)
-      return zodiacSign(from: jupiter.equatorialCoordinates.makeEclipticCoordinates().celestialLongitude)
+      return jupiter.equatorialCoordinates.makeEclipticCoordinates().celestialLongitude
     case .saturn:
       let saturn = Saturn(julianDay: now)
-      return zodiacSign(from: saturn.equatorialCoordinates.makeEclipticCoordinates().celestialLongitude)
+      return saturn.equatorialCoordinates.makeEclipticCoordinates().celestialLongitude
     }
   }
   
@@ -105,5 +119,23 @@ struct ZodiacManager {
     case 330..<360: return .pisces
     default: return .aries
     }
+  }
+}
+
+// MARK: - 달과 다른 행성들 간의 각도 계산
+extension ZodiacManager {
+  private func calculateAngleScores(for day: Int) -> [ZodiacSign: ZodiacScore] {
+    var zodiacScore: [ZodiacSign: ZodiacScore] = initialZodiacScores()
+    let moonLongtitude = planetLongtitude(for: day, planet: .moon)
+    
+    Planet.allCases.forEach { planet in
+      guard planet != .moon else { return }
+      let longtitude = planetLongtitude(for: day, planet: planet)
+      let zodiacSign = zodiacSign(from: longtitude)
+      let score = AngleScore.score(moonLongtitude: moonLongtitude, planetLongtitude: longtitude)
+      zodiacScore[zodiacSign]?.appendScore(score)
+    }
+    
+    return zodiacScore
   }
 }
