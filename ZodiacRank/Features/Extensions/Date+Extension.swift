@@ -13,11 +13,23 @@ extension Date {
     month: Int = Date.now.month,
     day: Int
   ) -> Date {
+    var calendar = Calendar(identifier: .gregorian)
+    calendar.timeZone = TimeZone(identifier: "Asia/Seoul")!
+    
     var comps = DateComponents()
     comps.year = year
     comps.month = month
     comps.day = day
+    comps.hour = 0
+    comps.minute = 0
     
-    return Calendar.current.date(from: comps) ?? .now
+    /*
+    let formatter = DateFormatter()
+    formatter.timeZone = TimeZone(identifier: "Asia/Seoul")
+    formatter.dateFormat = "yyyy-MM-dd HH:mm:ss Z"
+    print(formatter.string(from: calendar.date(from: comps)!))
+    */
+    
+    return calendar.date(from: comps) ?? .now
   }
 }
