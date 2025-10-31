@@ -38,4 +38,8 @@ struct ZodiacScore {
   mutating func appendScore(_ angleScore: AngleScore) {
     score += angleScore.rawValue
   }
+  
+  mutating func appendScore(_ houseScore: HouseScore) {
+    score += houseScore.value
+  }
 }

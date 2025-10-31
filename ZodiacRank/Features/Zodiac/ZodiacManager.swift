@@ -14,16 +14,17 @@ struct ZodiacManager {
   func zodiacRank(for day: Int = Date.now.day) -> [ZodiacSign] {
     let planetScores = calculatePlanetScores(for: day)
     let angleScores = calculateAngleScores(for: day)
-    let totalScores =  Dictionary(
-      uniqueKeysWithValues: planetScores.map { score in
-        let zodiacSign = score.key
-        var newScore = score
-        newScore.value.score += angleScores[zodiacSign]?.score ?? 0
-        
-        return newScore
-      }
+    let houseScores = calculateHouseScores(for: day)
+    let totalScore = calculateTotalScore(
+      planetScores: planetScores,
+      angleScores: angleScores,
+      houseScores: houseScores
     )
-    let sortedZodiac = sortZodiacScores(from: totalScores)
+    let sortedZodiac = sortZodiacScores(from: totalScore)
+    
+    sortedZodiac.forEach {
+      print($0.key.name, $0.value.score)
+    }
 
     return sortedZodiac.map { $0.value.sign }
   }
@@ -32,6 +33,36 @@ struct ZodiacManager {
     Dictionary(uniqueKeysWithValues: ZodiacSign.allCases.map { sign in
       (sign, ZodiacScore(sign: sign))
     })
+  }
+  
+  private func calculateTotalScore(
+    planetScores: [ZodiacSign: ZodiacScore],
+    angleScores: [ZodiacSign: ZodiacScore],
+    houseScores: [ZodiacSign: ZodiacScore],
+  ) -> [ZodiacSign: ZodiacScore] {
+    var totalScore: [ZodiacSign: ZodiacScore] = [:]
+    
+    // 최종 점수 공식의 가중치
+    let angleWeight: Double = 0.1
+    let houseWeight: Double = 0.05
+    
+    ZodiacSign.allCases.forEach { zodiacSign in
+      let planetScore = planetScores[zodiacSign]?.score ?? 0
+      let angleScore = angleScores[zodiacSign]?.score ?? 0
+      let houseScore = houseScores[zodiacSign]?.score ?? 0
+      
+      let weightedAngle = angleScore * angleWeight
+      let weightedHouse = houseScore * houseWeight
+      
+      let finalScore = planetScore + weightedAngle + weightedHouse
+      
+      if var zodiacScore = planetScores[zodiacSign] {
+        zodiacScore.score = finalScore
+        totalScore[zodiacSign] = zodiacScore
+      }
+    }
+    
+    return totalScore
   }
 }
 
@@ -133,6 +164,22 @@ extension ZodiacManager {
       let longtitude = planetLongtitude(for: day, planet: planet)
       let zodiacSign = zodiacSign(from: longtitude)
       let score = AngleScore.score(moonLongtitude: moonLongtitude, planetLongtitude: longtitude)
+      zodiacScore[zodiacSign]?.appendScore(score)
+    }
+    
+    return zodiacScore
+  }
+}
+
+// MARK: - 하우스 점수 계산
+extension ZodiacManager {
+  private func calculateHouseScores(for day: Int) -> [ZodiacSign: ZodiacScore] {
+    var zodiacScore: [ZodiacSign: ZodiacScore] = initialZodiacScores()
+    let sunLongtitude = planetLongtitude(for: day, planet: .sun)
+    let sunZodiacSign = zodiacSign(from: sunLongtitude)
+    
+    ZodiacSign.allCases.forEach { zodiacSign in
+      let score = HouseScore.score(sunZodiacSign: sunZodiacSign, zodiacSign: zodiacSign)
       zodiacScore[zodiacSign]?.appendScore(score)
     }
     
