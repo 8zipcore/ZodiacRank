@@ -9,7 +9,9 @@ import SwiftAA
 import Foundation
 
 struct ZodiacManager {
-  var zodiacScoresProvider: [ZodiacSign: ZodiacScore]?
+  typealias ZodiacScoreMap = [ZodiacSign: ZodiacScore]
+    
+  var zodiacScoresProvider: ZodiacScoreMap?
   
   func zodiacRank(for day: Int = Date.now.day) -> [ZodiacSign] {
     let planetScores = calculatePlanetScores(for: day)
@@ -29,18 +31,18 @@ struct ZodiacManager {
     return sortedZodiac.map { $0.value.sign }
   }
   
-  private func initialZodiacScores() -> [ZodiacSign: ZodiacScore] {
+  private func initialZodiacScores() -> ZodiacScoreMap {
     Dictionary(uniqueKeysWithValues: ZodiacSign.allCases.map { sign in
       (sign, ZodiacScore(sign: sign))
     })
   }
   
   private func calculateTotalScore(
-    planetScores: [ZodiacSign: ZodiacScore],
-    angleScores: [ZodiacSign: ZodiacScore],
-    houseScores: [ZodiacSign: ZodiacScore],
-  ) -> [ZodiacSign: ZodiacScore] {
-    var totalScore: [ZodiacSign: ZodiacScore] = [:]
+    planetScores: ZodiacScoreMap,
+    angleScores: ZodiacScoreMap,
+    houseScores: ZodiacScoreMap,
+  ) -> ZodiacScoreMap {
+    var totalScore: ZodiacScoreMap = [:]
     
     // 최종 점수 공식의 가중치
     let angleWeight: Double = 0.1
@@ -68,12 +70,12 @@ struct ZodiacManager {
 
 // MARK: - 행성 위치별 계산
 extension ZodiacManager {
-  private func calculatePlanetScores(for day: Int) -> [ZodiacSign: ZodiacScore] {
+  private func calculatePlanetScores(for day: Int) -> ZodiacScoreMap {
     if let mock = zodiacScoresProvider {
       return mock
     }
     
-    var zodiacScore: [ZodiacSign: ZodiacScore] = initialZodiacScores()
+    var zodiacScore = initialZodiacScores()
     
     Planet.allCases.forEach { planet in
       let longtitude = planetLongtitude(for: day, planet: planet)
@@ -155,8 +157,8 @@ extension ZodiacManager {
 
 // MARK: - 달과 다른 행성들 간의 각도 계산
 extension ZodiacManager {
-  private func calculateAngleScores(for day: Int) -> [ZodiacSign: ZodiacScore] {
-    var zodiacScore: [ZodiacSign: ZodiacScore] = initialZodiacScores()
+  private func calculateAngleScores(for day: Int) -> ZodiacScoreMap {
+    var zodiacScore = initialZodiacScores()
     let moonLongtitude = planetLongtitude(for: day, planet: .moon)
     
     Planet.allCases.forEach { planet in
@@ -173,8 +175,8 @@ extension ZodiacManager {
 
 // MARK: - 하우스 점수 계산
 extension ZodiacManager {
-  private func calculateHouseScores(for day: Int) -> [ZodiacSign: ZodiacScore] {
-    var zodiacScore: [ZodiacSign: ZodiacScore] = initialZodiacScores()
+  private func calculateHouseScores(for day: Int) -> ZodiacScoreMap {
+    var zodiacScore = initialZodiacScores()
     let sunLongtitude = planetLongtitude(for: day, planet: .sun)
     let sunZodiacSign = zodiacSign(from: sunLongtitude)
     
