@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum PlanetScore: Int {
+enum PlanetScore: Double {
   case rulership = 5
   case exaltation = 4
   case detriment = -5

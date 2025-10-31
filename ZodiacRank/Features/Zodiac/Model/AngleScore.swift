@@ -7,7 +7,7 @@
 
 import SwiftAA
 
-enum AngleScore: Int, CaseIterable {
+enum AngleScore: Double, CaseIterable {
   case trine = 3
   case sextile = 2
   case square = -3

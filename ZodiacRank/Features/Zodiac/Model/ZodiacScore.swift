@@ -9,7 +9,7 @@ import Foundation
 
 struct ZodiacScore {
   let sign: ZodiacSign
-  var score: Int = 0
+  var score: Double = 0
   // 동점 처리 / 통계용
   var rulershipCount: Int = 0
   var exaltationCount: Int = 0
