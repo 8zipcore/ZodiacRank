@@ -19,13 +19,15 @@ struct ZodiacManager {
     let houseScores = calculateHouseScores(for: day)
     let mansionScores = calculateLunarMansionScores(for: day)
     let moonPhaseScores = calculateMoonPhaseScores(for: day)
+    let dayRulerScores = calculateDayRulerScores(for: day)
     
     let totalScore = calculateTotalScore(
       planetScores: planetScores,
       angleScores: angleScores,
       houseScores: houseScores,
       mansionScores: mansionScores,
-      moonPhaseScores: moonPhaseScores
+      moonPhaseScores: moonPhaseScores,
+      dayRulerScores: dayRulerScores,
     )
     let sortedZodiac = sortZodiacScores(from: totalScore)
     
@@ -48,6 +50,7 @@ struct ZodiacManager {
     houseScores: ZodiacScoreMap,
     mansionScores: ZodiacScoreMap,
     moonPhaseScores: ZodiacScoreMap,
+    dayRulerScores: ZodiacScoreMap
   ) -> ZodiacScoreMap {
     var totalScore: ZodiacScoreMap = [:]
     
@@ -57,6 +60,7 @@ struct ZodiacManager {
     let houseWeight: Double = 0.05
     let mansionWeight: Double = 0.20
     let moonPhaseWeight: Double = 0.10
+    let dayRulerWeight: Double = 0.10
     
     ZodiacSign.allCases.forEach { zodiacSign in
       let planetScore = planetScores[zodiacSign]?.score ?? 0
@@ -64,15 +68,17 @@ struct ZodiacManager {
       let houseScore = houseScores[zodiacSign]?.score ?? 0
       let mansionScore = mansionScores[zodiacSign]?.score ?? 0
       let moonPhaseScore = moonPhaseScores[zodiacSign]?.score ?? 0
+      let dayRulerScore = dayRulerScores[zodiacSign]?.score ?? 0
       
       let weightedPlanet = planetScore * planetWeight
       let weightedAngle = angleScore * angleWeight
       let weightedHouse = houseScore * houseWeight
       let weightedMansion = mansionScore * mansionWeight
       let weightedMoonPhase = moonPhaseScore * moonPhaseWeight
+      let weightedDayRuler = dayRulerScore * dayRulerWeight
       
       let finalScore = weightedPlanet + weightedAngle + weightedHouse +
-                       weightedMansion + weightedMoonPhase
+                       weightedMansion + weightedMoonPhase + weightedDayRuler
       
       if var zodiacScore = planetScores[zodiacSign] {
         zodiacScore.score = finalScore
@@ -264,6 +270,34 @@ extension ZodiacManager {
       } else {
         zodiacScore[sign]?.appendScore(.detrimental)
       }
+    }
+    
+    return zodiacScore
+  }
+}
+
+// MARK: - 요일별 주행성 계산
+extension ZodiacManager {
+  private func calculateDayRulerScores(for day: Int) -> ZodiacScoreMap {
+    var zodiacScore = initialZodiacScores()
+    let date = Date.makeDate(day: day)
+    let weekday = Calendar.current.component(.weekday, from: date)
+    
+    let dayRuler: Planet
+    switch weekday {
+    case 1: dayRuler = .sun
+    case 2: dayRuler = .moon
+    case 3: dayRuler = .mars
+    case 4: dayRuler = .mercury
+    case 5: dayRuler = .jupiter
+    case 6: dayRuler = .venus
+    case 7: dayRuler = .saturn
+    default: dayRuler = .sun
+    }
+    
+    let ruledSigns = PlanetScore.rulerships(for: dayRuler)
+    ruledSigns.forEach { sign in
+      zodiacScore[sign]?.appendScore(15)
     }
     
     return zodiacScore

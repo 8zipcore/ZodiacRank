@@ -73,4 +73,23 @@ enum PlanetScore: Double {
       }
     }
   }
+  
+  static func rulerships(for planet: Planet) -> [ZodiacSign] {
+    switch planet {
+    case .sun:
+      return [.leo]
+    case .moon:
+      return [.cancer]
+    case .mercury:
+      return [.gemini, .virgo]
+    case .venus:
+      return [.taurus, .libra]
+    case .mars:
+      return [.aries, .scorpio]
+    case .jupiter:
+      return [.sagittarius, .pisces]
+    case .saturn:
+      return [.capricorn, .aquarius]
+    }
+  }
 }
