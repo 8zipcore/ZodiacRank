@@ -17,10 +17,13 @@ struct ZodiacManager {
     let planetScores = calculatePlanetScores(for: day)
     let angleScores = calculateAngleScores(for: day)
     let houseScores = calculateHouseScores(for: day)
+    let mansionScores = calculateLunarMansionScores(for: day)
+    
     let totalScore = calculateTotalScore(
       planetScores: planetScores,
       angleScores: angleScores,
-      houseScores: houseScores
+      houseScores: houseScores,
+      mansionScores: mansionScores
     )
     let sortedZodiac = sortZodiacScores(from: totalScore)
     
@@ -41,22 +44,29 @@ struct ZodiacManager {
     planetScores: ZodiacScoreMap,
     angleScores: ZodiacScoreMap,
     houseScores: ZodiacScoreMap,
+    mansionScores: ZodiacScoreMap
   ) -> ZodiacScoreMap {
     var totalScore: ZodiacScoreMap = [:]
     
     // 최종 점수 공식의 가중치
-    let angleWeight: Double = 0.1
+    let planetWeight: Double = 0.35
+    let angleWeight: Double = 0.10
     let houseWeight: Double = 0.05
+    let mansionWeight: Double = 0.20
     
     ZodiacSign.allCases.forEach { zodiacSign in
       let planetScore = planetScores[zodiacSign]?.score ?? 0
       let angleScore = angleScores[zodiacSign]?.score ?? 0
       let houseScore = houseScores[zodiacSign]?.score ?? 0
+      let mansionScore = mansionScores[zodiacSign]?.score ?? 0
       
+      let weightedPlanet = planetScore * planetWeight
       let weightedAngle = angleScore * angleWeight
       let weightedHouse = houseScore * houseWeight
+      let weightedMansion = mansionScore * mansionWeight
       
-      let finalScore = planetScore + weightedAngle + weightedHouse
+      let finalScore = weightedPlanet + weightedAngle + weightedHouse +
+                       weightedMansion
       
       if var zodiacScore = planetScores[zodiacSign] {
         zodiacScore.score = finalScore
@@ -183,6 +193,31 @@ extension ZodiacManager {
     ZodiacSign.allCases.forEach { zodiacSign in
       let score = HouseScore.score(sunZodiacSign: sunZodiacSign, zodiacSign: zodiacSign)
       zodiacScore[zodiacSign]?.appendScore(score)
+    }
+    
+    return zodiacScore
+  }
+}
+
+// MARK: - 달의 Lunar Mansion 계산
+extension ZodiacManager {
+  private func calculateLunarMansionScores(for day: Int) -> ZodiacScoreMap {
+    var zodiacScore = initialZodiacScores()
+    let moonLongitude = planetLongtitude(for: day, planet: .moon)
+    
+    // 28 lunar mansions (Nakshatras) - 각각 약 12.857도
+    let degreesPerLunarMansion: Double = 360.0 / 28.0
+    let mansionIndex = Int(moonLongitude.value / degreesPerLunarMansion) % 28
+    
+    let favoredSigns = LunarMansionScore.favoredSigns(for: mansionIndex)
+    let unfavoredSigns = LunarMansionScore.unfavoredSigns(for: mansionIndex)
+    
+    favoredSigns.forEach { sign in
+      zodiacScore[sign]?.appendScore(.favored)
+    }
+    
+    unfavoredSigns.forEach { sign in
+      zodiacScore[sign]?.appendScore(.unfavored)
     }
     
     return zodiacScore
