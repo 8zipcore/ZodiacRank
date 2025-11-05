@@ -20,6 +20,7 @@ struct ZodiacManager {
     let mansionScores = calculateLunarMansionScores(for: day)
     let moonPhaseScores = calculateMoonPhaseScores(for: day)
     let dayRulerScores = calculateDayRulerScores(for: day)
+    let dailyHashScores = calculateDailyHashScores(for: day)
     
     let totalScore = calculateTotalScore(
       planetScores: planetScores,
@@ -28,6 +29,7 @@ struct ZodiacManager {
       mansionScores: mansionScores,
       moonPhaseScores: moonPhaseScores,
       dayRulerScores: dayRulerScores,
+      dailyHashScores: dailyHashScores
     )
     let sortedZodiac = sortZodiacScores(from: totalScore)
     
@@ -50,7 +52,8 @@ struct ZodiacManager {
     houseScores: ZodiacScoreMap,
     mansionScores: ZodiacScoreMap,
     moonPhaseScores: ZodiacScoreMap,
-    dayRulerScores: ZodiacScoreMap
+    dayRulerScores: ZodiacScoreMap,
+    dailyHashScores: ZodiacScoreMap
   ) -> ZodiacScoreMap {
     var totalScore: ZodiacScoreMap = [:]
     
@@ -61,6 +64,7 @@ struct ZodiacManager {
     let mansionWeight: Double = 0.20
     let moonPhaseWeight: Double = 0.10
     let dayRulerWeight: Double = 0.10
+    let dailyHashWeight: Double = 0.10
     
     ZodiacSign.allCases.forEach { zodiacSign in
       let planetScore = planetScores[zodiacSign]?.score ?? 0
@@ -69,6 +73,7 @@ struct ZodiacManager {
       let mansionScore = mansionScores[zodiacSign]?.score ?? 0
       let moonPhaseScore = moonPhaseScores[zodiacSign]?.score ?? 0
       let dayRulerScore = dayRulerScores[zodiacSign]?.score ?? 0
+      let dailyHashScore = dailyHashScores[zodiacSign]?.score ?? 0
       
       let weightedPlanet = planetScore * planetWeight
       let weightedAngle = angleScore * angleWeight
@@ -76,9 +81,10 @@ struct ZodiacManager {
       let weightedMansion = mansionScore * mansionWeight
       let weightedMoonPhase = moonPhaseScore * moonPhaseWeight
       let weightedDayRuler = dayRulerScore * dayRulerWeight
+      let weightedDailyHash = dailyHashScore * dailyHashWeight
       
       let finalScore = weightedPlanet + weightedAngle + weightedHouse +
-                       weightedMansion + weightedMoonPhase + weightedDayRuler
+                       weightedMansion + weightedMoonPhase + weightedDayRuler + weightedDailyHash
       
       if var zodiacScore = planetScores[zodiacSign] {
         zodiacScore.score = finalScore
@@ -303,3 +309,24 @@ extension ZodiacManager {
     return zodiacScore
   }
 }
+
+// MARK: - 날짜 기반 난수 계산
+extension ZodiacManager {
+  private func calculateDailyHashScores(for day: Int) -> ZodiacScoreMap {
+    var zodiacScore = initialZodiacScores()
+    
+    let date = Date.makeDate(day: day)
+    let seed = UInt64(date.year * 10_000 + date.month * 100 + date.day)
+    
+    var rng = SeededRandomNumberGenerator(seed: seed)
+    
+    ZodiacSign.allCases.forEach { sign in
+      let randomBonus = Double.random(in: -10...10, using: &rng)
+      print(randomBonus)
+      zodiacScore[sign]?.appendScore(randomBonus)
+    }
+    
+    return zodiacScore
+  }
+}
+
