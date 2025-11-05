@@ -46,4 +46,8 @@ struct ZodiacScore {
   mutating func appendScore(_ lunarMansionScore: LunarMansionScore) {
     self.score += lunarMansionScore.rawValue
   }
+  
+  mutating func appendScore(_ moonPhaseScore: MoonPhaseScore) {
+    self.score += moonPhaseScore.rawValue
+  }
 }

@@ -27,4 +27,17 @@ enum ZodiacSign: Int, CaseIterable {
     case .pisces: return "물고기자리"
     }
   }
+  
+  var element: ZodiacElement {
+    switch self {
+    case .aries, .leo, .sagittarius:
+      return .fire
+    case .taurus, .virgo, .capricorn:
+      return .earth
+    case .gemini, .libra, .aquarius:
+      return .air
+    case .cancer, .scorpio, .pisces:
+      return .water
+    }
+  }
 }

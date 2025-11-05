@@ -18,12 +18,14 @@ struct ZodiacManager {
     let angleScores = calculateAngleScores(for: day)
     let houseScores = calculateHouseScores(for: day)
     let mansionScores = calculateLunarMansionScores(for: day)
+    let moonPhaseScores = calculateMoonPhaseScores(for: day)
     
     let totalScore = calculateTotalScore(
       planetScores: planetScores,
       angleScores: angleScores,
       houseScores: houseScores,
-      mansionScores: mansionScores
+      mansionScores: mansionScores,
+      moonPhaseScores: moonPhaseScores
     )
     let sortedZodiac = sortZodiacScores(from: totalScore)
     
@@ -44,7 +46,8 @@ struct ZodiacManager {
     planetScores: ZodiacScoreMap,
     angleScores: ZodiacScoreMap,
     houseScores: ZodiacScoreMap,
-    mansionScores: ZodiacScoreMap
+    mansionScores: ZodiacScoreMap,
+    moonPhaseScores: ZodiacScoreMap,
   ) -> ZodiacScoreMap {
     var totalScore: ZodiacScoreMap = [:]
     
@@ -53,20 +56,23 @@ struct ZodiacManager {
     let angleWeight: Double = 0.10
     let houseWeight: Double = 0.05
     let mansionWeight: Double = 0.20
+    let moonPhaseWeight: Double = 0.10
     
     ZodiacSign.allCases.forEach { zodiacSign in
       let planetScore = planetScores[zodiacSign]?.score ?? 0
       let angleScore = angleScores[zodiacSign]?.score ?? 0
       let houseScore = houseScores[zodiacSign]?.score ?? 0
       let mansionScore = mansionScores[zodiacSign]?.score ?? 0
+      let moonPhaseScore = moonPhaseScores[zodiacSign]?.score ?? 0
       
       let weightedPlanet = planetScore * planetWeight
       let weightedAngle = angleScore * angleWeight
       let weightedHouse = houseScore * houseWeight
       let weightedMansion = mansionScore * mansionWeight
+      let weightedMoonPhase = moonPhaseScore * moonPhaseWeight
       
       let finalScore = weightedPlanet + weightedAngle + weightedHouse +
-                       weightedMansion
+                       weightedMansion + weightedMoonPhase
       
       if var zodiacScore = planetScores[zodiacSign] {
         zodiacScore.score = finalScore
@@ -218,6 +224,46 @@ extension ZodiacManager {
     
     unfavoredSigns.forEach { sign in
       zodiacScore[sign]?.appendScore(.unfavored)
+    }
+    
+    return zodiacScore
+  }
+}
+
+// MARK: - 달의 위상 계산
+extension ZodiacManager {
+  private func calculateMoonPhaseScores(for day: Int) -> ZodiacScoreMap {
+    var zodiacScore = initialZodiacScores()
+    let moonLongitude = planetLongtitude(for: day, planet: .moon)
+    let sunLongitude = planetLongtitude(for: day, planet: .sun)
+    
+    // 달과 태양 사이의 각도 차이 (0°~360°)
+    let phaseDegree = (moonLongitude.value - sunLongitude.value + 360).truncatingRemainder(dividingBy: 360)
+    
+    // 위상별 강화 원소
+    let favoredElements: [ZodiacElement]
+    switch phaseDegree {
+    case 0..<45:   // 🌑 신월 - 시작, 의지, 불의 에너지
+      favoredElements = [.fire]
+    case 45..<90:  // 🌒 초승달 - 성장, 안정, 흙의 에너지
+      favoredElements = [.earth]
+    case 90..<135: // 🌓 상현달 - 소통, 사고, 공기의 에너지
+      favoredElements = [.air]
+    case 135..<225: // 🌕 보름달 - 감정, 관계, 물의 에너지
+      favoredElements = [.water]
+    case 225..<270: // 🌗 하현달 - 정리, 구조화, 흙의 에너지
+      favoredElements = [.earth]
+    default: // 🌘 그믐달 - 내면, 휴식, 물의 에너지
+      favoredElements = [.water]
+    }
+    
+    // 점수 배분
+    for sign in ZodiacSign.allCases {
+      if favoredElements.contains(sign.element) {
+        zodiacScore[sign]?.appendScore(.beneficial)
+      } else {
+        zodiacScore[sign]?.appendScore(.detrimental)
+      }
     }
     
     return zodiacScore
